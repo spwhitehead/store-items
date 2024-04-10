@@ -25,6 +25,7 @@ async def list_accessories() -> list[StoreItem]:
 @ app.post("/accessories")
 async def add_accessories(item: StoreItem) -> None:
     items.append(item)
+    return "Item added successfully"
 
 
 @ app.put("/accessories/{item_id}")
@@ -32,12 +33,12 @@ async def update_accessories(item_id: int, updated_item: StoreItem) -> None:
     for i, item in enumerate(items):
         if item.id == item_id:
             items[i] = updated_item
-            return
+            return "Item updated successfully"
 
 
 @ app.delete("/accessories/{item_id}")
 async def delete_accessories(item_id: int) -> None:
-    for i, item in enumerate(itmes):
+    for i, item in enumerate(items):
         if item.id == item_id:
             items.pop(i)
-            return
+            return "Item successfully deleted"
