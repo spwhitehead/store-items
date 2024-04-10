@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Accessory(BaseModel):
+class StoreItem(BaseModel):
     id: int
     name: str
     description: str

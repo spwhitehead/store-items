@@ -1,9 +1,8 @@
-from fastapi import FastAPI
 import json
-import uuid
-import requests
 
-from models import Accessory
+from fastapi import FastAPI
+
+from models import StoreItem
 
 
 app = FastAPI()
@@ -12,36 +11,33 @@ filename = "Store Items.json"
 with open(filename, 'r') as f:
     data = json.load(f)
 
-accessories: dict[uuid.UUID, Accessory] = {}
+items: list[StoreItem] = []
+
+for item in data:
+    items.append(StoreItem(**item))
 
 
-@app.get("/accessories")
-async def list_accessories() -> list[Accessory]:
-    return data
+@ app.get("/accessories")
+async def list_accessories() -> list[StoreItem]:
+    return items
 
 
-@app.post("/accessories")
-async def add_accessories(acc_detail: Accessory) -> uuid.UUID:
-    acc_id = uuid.uuid4()
-    acc = Accessory(
-        id=acc_id,
-        name=acc_detail.name,
-        description=acc_detail.description,
-        price=acc_detail.price
-    )
-    data[str(acc_id)] = acc.model_dump()
-
-    with open(filename, 'w') as f:
-        json.dump(data, f, indent=4)
-
-    return acc_id
+@ app.post("/accessories")
+async def add_accessories(item: StoreItem) -> None:
+    items.append(item)
 
 
-@app.put("/accessories")
-async def update_accessories():
-    pass
+@ app.put("/accessories/{item_id}")
+async def update_accessories(item_id: int, updated_item: StoreItem) -> None:
+    for i, item in enumerate(items):
+        if item.id == item_id:
+            items[i] = updated_item
+            return
 
 
-@app.delete("/accessories")
-async def delete_accessories():
-    pass
+@ app.delete("/accessories/{item_id}")
+async def delete_accessories(item_id: int) -> None:
+    for i, item in enumerate(itmes):
+        if item.id == item_id:
+            items.pop(i)
+            return
