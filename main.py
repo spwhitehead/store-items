@@ -12,10 +12,12 @@ filename = "Store Items.json"
 with open(filename, 'r') as f:
     data = json.load(f)
 
+accessories: dict[uuid.UUID, Accessory] = {}
+
 
 @app.get("/accessories")
 async def list_accessories() -> list[Accessory]:
-    return data.values()
+    return data
 
 
 @app.post("/accessories")
@@ -27,7 +29,7 @@ async def add_accessories(acc_detail: Accessory) -> uuid.UUID:
         description=acc_detail.description,
         price=acc_detail.price
     )
-    data[str(acc_id)] = acc.dict()
+    data[str(acc_id)] = acc.model_dump()
 
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)
